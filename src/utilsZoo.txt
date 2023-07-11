@@ -1,0 +1,35 @@
+#######################
+## Catherine Chia
+## 
+#######################
+'''
+This text file contains all snippets that enable the main source code to work.
+'''
+
+#Use Github CLI
+##https://docs.github.com/en/codespaces/developing-in-codespaces/using-github-codespaces-with-github-cli#ssh-into-a-codespace
+##https://docs.github.com/en/codespaces/developing-in-codespaces/using-github-codespaces-with-github-cli#open-a-codespace-in--data-variablesproductprodname_vscode-
+brew install gh
+gh auth login
+~/.ssh/id_ed25519
+gh auth refresh -h github.com -s codespace
+
+
+#Copy a file to/from a codespace
+##https://docs.github.com/en/codespaces/developing-in-codespaces/using-github-codespaces-with-github-cli#copy-a-file-tofrom-a-codespace
+##gh codespace cp [-r] SOURCE(S) DESTINATION
+gh codespace cp myfile.txt remote:/workspaces/REPOSITORY-NAME
+gh codespace cp "localpath/kaggle.json" remote:.kaggle
+gh codespace cp "/Users/catchia/_MOOC/Artificial_Intelligence/20230707_multimodal/kaggle.json" remote:"/.kaggle/" #Didn't workspaces
+#uploaded kaggle.json to src, then mv path/kaggle.json /home/codespace/.kaggle
+
+#Use kaggle API
+kaggle competitions list
+
+#Download datasets
+##https://www.kaggle.com/datasets/ericpierce/austinhousingprices
+##Reference https://www.kaggle.com/docs/api
+##Reference https://colab.research.google.com/github/corrieann/kaggle/blob/master/kaggle_api_in_colab.ipynb#scrollTo=Oqt7Yfi5aQuM
+kaggle datasets download -d ericpierce/austinhousingprices
+
+kaggle competitions download -c [COMPETITION]

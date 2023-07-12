@@ -33,3 +33,6 @@ kaggle competitions list
 kaggle datasets download -d ericpierce/austinhousingprices
 
 kaggle competitions download -c [COMPETITION]
+
+#Start a jupyter notebook for its fast gui 
+gh cs jupyter

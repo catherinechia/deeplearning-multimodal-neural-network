@@ -8,12 +8,16 @@ This script inspects the datasets (tabular and images)
 '''
 
 #Libraries
-#Libraries
 import numpy as np
 import pandas as pd
 import os 
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from scipy import stats
+
+#Definitions
+def statistic(x):
+    return stats.shapiro(x).pvalue
 
 
 ####################################################################
@@ -113,3 +117,48 @@ plt.ylabel("Latitude (deg)")
 ax.legend(*p_scatter.legend_elements(), title='clusters')
 
 plt.show()
+
+####################################################################
+#Target inflation adjustment
+#Import tabular dataset and a brief inspection
+df_CPI = pd.read_csv('data/key_economic_indicators.csv')
+print(df_CPI.shape)
+print(list(df_CPI.columns), )
+
+#Dropna for empty CPI rows
+df_CPI = df_CPI.dropna(subset=['Consumer Price Index TX'], axis=0)
+print(df_CPI.shape)
+
+#Pivot table to get average CPI per year
+df_CPI_pivot = pd.pivot_table(df_CPI, values='Consumer Price Index TX', index=['Year'], columns=['Month'])
+
+##Normality test
+#The Shapiro-Wilk test tests the null hypothesis that the data was drawn from a normal distribution.
+
+l_normality = []
+for index, row in df_CPI_pivot.iterrows():
+    l_normality.append(statistic(row))
+
+#Check if there is at least one element with significant pvalue (reject null hypothesis of being normally distributed)
+#Apply median as average if not all rows are normally distributed, otherwise use mean
+alpha = 0.05
+if all(num > alpha for num in l_normality): #greater than alpha = not significant
+    df_CPI_pivot['ave_CPI'] = df_CPI_pivot.mean(axis=1)
+else: 
+    df_CPI_pivot['ave_CPI'] = df_CPI_pivot.median(axis=1)
+
+#Drop unused columns and made it a dictionary
+df_CPI_ave = df_CPI_pivot[['ave_CPI']]
+d_CPI_ave = df_CPI_ave['ave_CPI'].to_dict()
+
+
+##Inflation adjustment
+#Check for the sale year range
+print("oldest house sale year: ", str(min(df_processed["latest_saleyear"])))
+print("latest house sale year: ", str(max(df_processed["latest_saleyear"])))
+
+#loop through house sales dataframe rows and adjust for inflation
+df_processed['adjPrice']=1 
+for ind, row in df_processed.iterrows(): #row here is disconnected to the original dataframe
+    temp_CPI = d_CPI_ave[row['latest_saleyear']]
+    df_processed.loc[ind, 'adjPrice'] = row['latestPrice']/temp_CPI * 100

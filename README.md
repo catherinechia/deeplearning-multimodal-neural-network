@@ -3,6 +3,7 @@ Reproducing work from https://medium.com/@dave.cote.msc/hybrid-multimodal-neural
 
 Other sources: 
 - Dataset: https://www.kaggle.com/datasets/ericpierce/austinhousingprices
+- Dataset: https://data.texas.gov/Business-and-Economy/key-economic-indicators/np6r-w7eh
 - Kaggle API: https://www.kaggle.com/docs/api
 
 This is an on-going work performed on Github Codespaces (it's awesome).

@@ -20,10 +20,13 @@ gh auth refresh -h github.com -s codespace
 ##gh codespace cp [-r] SOURCE(S) DESTINATION
 gh codespace cp myfile.txt remote:/workspaces/REPOSITORY-NAME
 gh codespace cp "localpath/kaggle.json" remote:.kaggle
-gh codespace cp "/Users/catchia/_MOOC/Artificial_Intelligence/20230707_multimodal/kaggle.json" remote:"/.kaggle/" #Didn't workspaces
+gh codespace cp "localpath/kaggle.json" remote:"/.kaggle/" #Didn't work
+cd ~
+mkdir .kaggle
 #uploaded kaggle.json to src, then mv path/kaggle.json /home/codespace/.kaggle
 
 #Use kaggle API
+pip install kaggle
 kaggle competitions list
 
 #Download datasets
@@ -36,3 +39,21 @@ kaggle competitions download -c [COMPETITION]
 
 #Start a jupyter notebook for its fast gui 
 gh cs jupyter
+
+##Manually move the images
+import pandas as pd 
+import os 
+
+path_destination = "/workspaces/deeplearning-multimodal-neural-network/data/images/train/bad"
+path_source = "/workspaces/deeplearning-multimodal-neural-network/data/homeimages"
+path = "/workspaces/deeplearning-multimodal-neural-network/data/img_train_bad.csv"
+df = pd.read_csv(path)
+
+l_files = df['train_bad'].tolist()
+l_files.remove(".DS_Store")
+
+# iterate on all files to move them to destination folder
+for f in l_files:
+    src_path = os.path.join(path_source, f)
+    dst_path = os.path.join(path_destination, f)
+    os.rename(src_path, dst_path)
